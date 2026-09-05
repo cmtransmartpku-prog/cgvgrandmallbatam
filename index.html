@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CGV Grand Mall Batam — F&B Ordering</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff7f8;color:#111;position:relative;overflow-x:hidden}
+header{background:linear-gradient(110deg,#e91d38 0%,#ff3d2f 55%,#ff5a2b 100%);color:#fff;padding:20px 5%;border-bottom:0;display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 30px #8e001822;position:relative;z-index:2}
+.logo{display:flex;align-items:center}.logo img{height:48px;width:auto;display:block}.logo{font-weight:900;font-size:34px;color:#fff;letter-spacing:-2px}.sub{font-size:13px;color:#fff;letter-spacing:1.5px;font-weight:700}
+.wrap{max-width:1200px;margin:28px auto;padding:0 18px;display:grid;grid-template-columns:360px 1fr;gap:22px;position:relative;z-index:1}
+.card{background:rgba(255,255,255,.96);border-radius:18px;padding:22px;box-shadow:0 12px 35px #9f172022;border:1px solid #ffffff}
+h2{margin:0 0 18px;font-size:21px}
+label{display:block;font-size:12px;font-weight:700;margin:12px 0 6px}
+input,select{width:100%;padding:11px;border:1px solid #ddd;border-radius:7px;background:#fff;font-size:14px}
+.pay{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.pay label{margin:0}.pay input{display:none}
+.pay span{display:block;text-align:center;border:1px solid #ddd;border-radius:7px;padding:11px;font-size:12px;cursor:pointer}
+.pay input:checked+span{background:#e91d38;color:#fff;border-color:#e91d38;font-weight:700}
+.menu{display:block}
+.menu-group{margin:0}
+.menu-group-title{font-size:15px;font-weight:900;margin:20px 0 7px;text-transform:uppercase}
+.item{border:0;border-bottom:1px solid #e7e7e7;border-radius:0;padding:10px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:62px}
+.name{font-weight:400;font-size:14px;line-height:1.2}.cat{display:none}.price{font-size:11px;color:#555;margin-top:3px}
+.qty{display:flex;align-items:center;gap:12px;flex:0 0 auto}.qty button{width:32px;height:32px;border:0;border-radius:9px;background:#e91d38;color:#fff;font-size:18px;line-height:32px;padding:0;cursor:pointer}.qty b{min-width:12px;text-align:center;font-size:16px}
+.summary-title{font-size:18px;font-weight:800;margin:0;padding:0 0 10px;border-bottom:2px solid #e91d38}
+.summary-box{background:#111;color:#fff;border-radius:12px;padding:17px 14px;margin-top:14px}
+.summary-box .head{font-size:14px;font-weight:700;margin-bottom:6px}
+.summary-box .info{font-size:13px;line-height:1.48}.summary-box .items{margin-top:20px;font-size:13px;line-height:1.55}
+.summary-box .total{font-size:23px;font-weight:900;color:#ff4b45;margin-top:18px}
+.actions{display:grid;gap:10px;margin-top:14px}.action{border:0;border-radius:9px;padding:13px;font-size:14px;font-weight:800;cursor:pointer}
+.wa{background:#20d266;color:#111}.copy{background:#ffd000;color:#111}.reset{background:#eee;color:#111}
+.note{font-size:11px;color:#777;margin-top:9px;line-height:1.4}
+.combo-config{display:none;background:#fff5f6;border:1px solid #f1cdd2;border-radius:12px;padding:12px;margin:6px 0 12px}
+.combo-config.show{display:block}.combo-config h4{margin:0 0 8px;font-size:12px;color:#9d1320;text-transform:uppercase;letter-spacing:.4px}
+.combo-option{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:10px 12px;margin:5px 0;background:#fff;border:1px solid #e7dfe0;border-radius:10px;font-size:12px;cursor:pointer;text-align:left;transition:.15s}
+.combo-option.selected{border-color:#e91d38;background:linear-gradient(135deg,#fff0f2,#ffe3e7);box-shadow:0 0 0 2px rgba(233,29,56,.08)}.combo-option input{display:none}.combo-option .opt-price{font-weight:800;color:#e91d38;white-space:nowrap}
+.combo-slot{margin-top:10px}.combo-slot:first-child{margin-top:0}.combo-hint{font-size:10px;color:#777;margin:5px 0}
+.combo-open{display:flex;align-items:center;justify-content:center;width:100%;margin:8px 0 8px;padding:10px 12px;border:0;border-radius:10px;background:linear-gradient(135deg,#e91d38,#ff4b3f);color:#fff;font-weight:900;font-size:12px;cursor:pointer;box-shadow:0 5px 14px rgba(233,29,56,.18)}.combo-open:active{transform:scale(.99)}
+
+@media(max-width:800px){.wrap{grid-template-columns:1fr}.item{padding:10px 0}.name{font-size:14px}.qty{gap:12px}.qty button{width:32px;height:32px;line-height:32px}} @media(max-width:520px){.item{min-height:62px}.logo{font-size:25px}.logo img{height:38px}}
+.page-bg{position:fixed;inset:0;background-image:url("cgv-web-background.png");background-size:cover;background-position:center top;background-repeat:no-repeat;opacity:.72;z-index:0;pointer-events:none}.page-bg:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,.08),rgba(255,255,255,.35))}
+</style>
+</head>
+<body><div class="page-bg"></div>
+<header><div class="logo"><img src="cgv-logo-final.png" alt="CGV"></div><div class="sub">F&B ORDERING • GRAND MALL BATAM<br><span style="font-size:11px;opacity:.9">WhatsApp: 0817-6880-705</span></div></header>
+
+<div class="wrap"><div style="grid-column:1/-1;text-align:center;padding:8px 0 2px"><div style="font-size:12px;letter-spacing:5px;color:#e91d38;font-weight:800">GOOD FOOD • GREAT MOVIES</div><h1 style="margin:7px 0 4px;color:#9d1320;font-size:clamp(28px,4vw,46px)">CGV F&amp;B ORDERING</h1><div style="font-size:13px;letter-spacing:3px;color:#3a2430;font-weight:700">GRAND MALL BATAM</div></div>
+<div class="card">
+<h2>Detail Pemesanan</h2>
+<label>Auditorium</label><select id="aud"><option value="">Pilih Auditorium</option><option>Auditorium 1</option><option>Satin Suite 2</option><option>Satin 3</option><option>Auditorium 4</option><option>Auditorium 5</option><option>Auditorium 6</option></select>
+<label>Nomor Seat</label><input id="seat" placeholder="Contoh: A10">
+<label>Movie</label><input id="movie" placeholder="Judul film">
+<label>Jam Tayang</label><input id="show" type="time">
+<label>Nama Pemesan</label><input id="cust" placeholder="Nama">
+<label>No. Telepon</label><input id="phone" placeholder="08xxxxxxxxxx" type="tel">
+<label>Payment</label>
+<div class="pay">
+<label><input type="radio" name="payment" value="Cash" checked><span>💵 Cash</span></label>
+<label><input type="radio" name="payment" value="Debit"><span>💳 Debit</span></label>
+</div>
+<div style="margin-top:22px"><div class="summary-title">🧾 Ringkasan Pesanan</div></div>
+</div>
+
+<div class="card">
+<h2>Pilihan F&B</h2><div class="menu" id="menu"></div>
+
+<div class="summary-title" style="margin-top:25px">🧾 Ringkasan Pesanan</div>
+<div class="summary-box" id="summaryBox"></div>
+<div class="actions">
+<button class="action wa" onclick="sendWA()">📲 Kirim Pesanan ke WhatsApp</button>
+<button class="action copy" onclick="copySummary()">📋 Copy Summary</button>
+<button class="action reset" onclick="resetOrder()">↻ Reset Pesanan</button>
+</div>
+</div>
+</div>
+
+<script>
+const WA="628176880705";
+const products=[
+["Large Popcorn",84000,"POPCORN"],["Large Salty",72000,"POPCORN"],["Large Mix Popcorn",84000,"POPCORN"],["Medium Caramel",60000,"POPCORN"],["Medium Salty",48000,"POPCORN"],
+["Combo Nestle",79000,"COMBO PROMO"],["Combo Duo Nestle",110000,"COMBO PROMO"],["Combo Double",120000,"COMBO PROMO"],
+["Iced Lychee Tea",54000,"DRINK CONCESSION"],["Iced Honey Lemon Tea",54000,"DRINK CONCESSION"],["Milo Crunchy",52000,"DRINK CONCESSION"],["Large Cappucino",45000,"DRINK CONCESSION"],["Large Jasmine",42000,"DRINK CONCESSION"],
+["Sampler",65000,"FOOD & SNACK"],["French Fries",55000,"FOOD & SNACK"],["Chicken Popcorn & Fries",60000,"FOOD & SNACK"],["Sausage & Fries",60000,"FOOD & SNACK"],["Sausage Bun Beef",55000,"FOOD & SNACK"],["Sausage Bun Chicken",55000,"FOOD & SNACK"],["Fried Somay",55000,"FOOD & SNACK"]
+];
+let cart=products.map(()=>0);
+const rp=n=>"Rp "+n.toLocaleString("id-ID");
+const orderId="CGV"+String(Date.now()).slice(-6);
+
+const comboDefs={
+ "Combo Nestle":{
+  groups:[
+   {key:"snack",label:"Pilih Snack",options:[["Chicken Saussage & Fries",0],["Beef Saussage & Fries",0],["CGV Sampler",0]]},
+   {key:"drink",label:"Pilih Minuman",options:[["Medium Nescafe Cappucino",0],["Blackcurrent Boba",0],["Yakult Lemonade",0],["Milo Crunchy",0]]}
+  ]
+ },
+ "Combo Duo Nestle":{
+  groups:[
+   {key:"pop1",label:"Pilih Popcorn 1",options:[["Medium Salty",0],["Medium Caramel",8000],["Large Salty",20000],["Large Caramel",23000],["Large Mix Popcorn",23000]]},
+   {key:"pop2",label:"Pilih Popcorn 2",options:[["Medium Salty",0],["Medium Caramel",8000],["Large Salty",20000],["Large Caramel",23000],["Large Mix Popcorn",23000]]},
+   {key:"drink1",label:"Pilih Minuman 1",options:[["Medium Nescafe Cappucino",0],["Milo Crunchy",0]]},
+   {key:"drink2",label:"Pilih Minuman 2",options:[["Medium Nescafe Cappucino",0],["Milo Crunchy",0]]}
+  ]
+ },
+ "Combo Double":{
+  groups:[
+   {key:"pop1",label:"Pilih Popcorn 1",options:[["Medium Salty",0],["Medium Caramel",8000],["Large Salty",20000],["Large Caramel",23000],["Large Mix Popcorn",23000]]},
+   {key:"pop2",label:"Pilih Popcorn 2",options:[["Medium Salty",0],["Medium Caramel",8000],["Large Salty",20000],["Large Caramel",23000],["Large Mix Popcorn",23000]]},
+   {key:"drink1",label:"Pilih Minuman 1",options:[["Medium Jasmine",0],["Medium Cola-cola",0],["Medium Fanta",0],["Medium Sprite",0]]},
+   {key:"drink2",label:"Pilih Minuman 2",options:[["Medium Jasmine",0],["Medium Cola-cola",0],["Medium Fanta",0],["Medium Sprite",0]]}
+  ]
+ }
+};
+const comboChoices={};
+function comboKey(i){return String(i)}
+function comboHtml(i,name){
+ const def=comboDefs[name]; if(!def)return '';
+ comboChoices[comboKey(i)]={};
+ return `<div class="combo-config" id="cfg${i}">${def.groups.map((g,gi)=>`<div class="combo-slot"><h4>${g.label}</h4><div class="combo-hint">Pilih 1 opsi</div>${g.options.map((o,oi)=>`<button type="button" class="combo-option" id="co-${i}-${gi}-${oi}" onclick="setCombo(${i},${gi},${oi})"><span>◉ ${o[0]}</span><span class="opt-price">${o[1]?'+'+rp(o[1]):'Rp 0'}</span></button>`).join('')}</div>`).join('')}</div>`;
+}
+const groups=[...new Set(products.map(p=>p[2]))];
+document.getElementById("menu").innerHTML=groups.map(g=>`<div class="menu-group"><div class="menu-group-title">${g}</div>${products.map((p,i)=>p[2]===g?`<div class="item"><div><div class="name">${p[0]}</div><div class="price">${rp(p[1])}</div></div><div class="qty"><button onclick="chg(${i},-1)">−</button><b id="q${i}">0</b><button onclick="chg(${i},1)">+</button></div></div>${comboDefs[p[0]]?`<button type="button" class="combo-open" id="open${i}" onclick="toggleCombo(${i})">🎁 PILIH PILIHAN COMBO</button>`+comboHtml(i,p[0]):""}`:"").join("")}</div>`).join("");
+
+["aud","seat","movie","show","cust","phone"].forEach(id=>document.getElementById(id).addEventListener("input",render));
+document.querySelectorAll('input[name="payment"]').forEach(x=>x.addEventListener("change",render));
+
+function toggleCombo(i){ const cfg=document.getElementById("cfg"+i); if(!cfg)return; cfg.classList.toggle("show"); const b=document.getElementById("open"+i); if(b)b.textContent=cfg.classList.contains("show")?"▲ TUTUP PILIHAN COMBO":"🎁 PILIH PILIHAN COMBO"; }
+function chg(i,d){
+ cart[i]=Math.max(0,cart[i]+d);
+ document.getElementById("q"+i).textContent=cart[i];
+ const cfg=document.getElementById("cfg"+i);
+ if(cfg){cfg.classList.toggle('show',cart[i]>0); const b=document.getElementById('open'+i); if(b)b.textContent=cart[i]>0?'▲ TUTUP PILIHAN COMBO':'🎁 PILIH PILIHAN COMBO'; if(cart[i]===0){comboChoices[comboKey(i)]={}; }}
+ render();
+}
+function setCombo(i,gi,oi){
+ comboChoices[comboKey(i)][gi]=oi;
+ document.querySelectorAll(`#cfg${i} .combo-slot:nth-child(${gi+1}) .combo-option`).forEach((el,idx)=>el.classList.toggle('selected',idx===oi));
+ render();
+}
+function comboValid(i){
+ const p=products[i], def=comboDefs[p[0]]; if(!def)return true;
+ return def.groups.every((g,gi)=>comboChoices[comboKey(i)] && comboChoices[comboKey(i)][gi]!==undefined);
+}
+function comboDetail(i){
+ const p=products[i], def=comboDefs[p[0]], chosen=comboChoices[comboKey(i)]||{};
+ if(!def)return {labels:[],surcharge:0,ok:true};
+ const labels=[]; let surcharge=0;
+ def.groups.forEach((g,gi)=>{const oi=chosen[gi]; if(oi!==undefined){const o=g.options[oi]; labels.push(`${g.label.replace('Pilih ','')}: ${o[0]}`); surcharge+=o[1]||0;}});
+ return {labels,surcharge,ok:comboValid(i)};
+}
+function getData(){
+ let lines=[],total=0;
+ products.forEach((p,i)=>{if(cart[i]){
+   let sub=cart[i]*p[1];
+   const cd=comboDetail(i);
+   if(comboDefs[p[0]]) sub+=cart[i]*cd.surcharge;
+   total+=sub;
+   lines.push({qty:cart[i],name:p[0],sub,combo:comboDefs[p[0]]?cd:null});
+ }});
+ return {lines,total};
+}
+function render(){
+ const d=getData(), pay=document.querySelector('input[name="payment"]:checked').value;
+ let items=d.lines.length?d.lines.map(x=>`${x.qty}× ${x.name} — ${rp(x.sub)}${x.combo&&x.combo.labels.length?`<div style="font-size:11px;color:#555;margin:3px 0 8px 16px">${x.combo.labels.join('<br>')}</div>`:''}`).join("<br>"):"Belum ada item yang dipilih.";
+ document.getElementById("summaryBox").innerHTML=
+ `<div class="head">ORDER ${orderId}</div>
+ <div class="info"><b>Auditorium:</b> ${esc(document.getElementById("aud").value||"-")}<br>
+ <b>Movie:</b> ${esc(document.getElementById("movie").value||"-")}<br>
+ <b>Jam Tayang:</b> ${esc(document.getElementById("show").value||"-")}<br>
+ <b>Nama:</b> ${esc(document.getElementById("cust").value||"-")}<br>
+ <b>No. HP:</b> ${esc(document.getElementById("phone").value||"-")}<br>
+ <b>Pembayaran:</b> ${pay}</div>
+ <div class="items">${items}</div>
+ <div class="total">Total: ${rp(d.total)}</div>`;
+}
+function plainSummary(){
+ const d=getData(),pay=document.querySelector('input[name="payment"]:checked').value;
+ let lines=d.lines.length?d.lines.map(x=>{let s=`${x.qty}x ${x.name} - ${rp(x.sub)}`; if(x.combo&&x.combo.labels.length)s+='\n   '+x.combo.labels.join('\n   '); return s}).join("\n"):"Belum ada item yang dipilih.";
+ return `ORDER ${orderId}\nAuditorium: ${document.getElementById("aud").value||"-"}\nNomor Seat: ${document.getElementById("seat").value||"-"}\nMovie: ${document.getElementById("movie").value||"-"}\nJam Tayang: ${document.getElementById("show").value||"-"}\nNama: ${document.getElementById("cust").value||"-"}\nNo. HP: ${document.getElementById("phone").value||"-"}\nPembayaran: ${pay}\n\nF&B:\n${lines}\n\nTotal: ${rp(d.total)}`;
+}
+function sendWA(){
+ const d=getData(); if(!d.lines.length){alert("Silakan pilih minimal 1 F&B.");return}
+ const invalid=d.lines.find((x)=>comboDefs[x.name]&&!x.combo.ok);
+ if(invalid){alert(`Silakan lengkapi pilihan untuk ${invalid.name}.`);return}
+ window.open("https://wa.me/"+WA+"?text="+encodeURIComponent("*"+plainSummary()+"*"),"_blank");
+}
+async function copySummary(){
+ try{await navigator.clipboard.writeText(plainSummary());alert("Summary berhasil dicopy.");}
+ catch(e){alert("Copy otomatis tidak tersedia di browser ini.");}
+}
+function resetOrder(){
+ if(!confirm("Reset semua pesanan?"))return;
+ cart=products.map(()=>0);
+ Object.keys(comboChoices).forEach(k=>comboChoices[k]={});
+ products.forEach((p,i)=>{document.getElementById("q"+i).textContent=0; const cfg=document.getElementById("cfg"+i); if(cfg){cfg.classList.remove('show');cfg.querySelectorAll('.combo-option').forEach(x=>x.classList.remove('selected')); const b=document.getElementById('open'+i); if(b)b.textContent='🎁 PILIH PILIHAN COMBO';}});
+ ["aud","seat","movie","show","cust","phone"].forEach(id=>document.getElementById(id).value="");
+ document.querySelector('input[value="Cash"]').checked=true;render();
+}
+render();
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function plainSummary(){
+ const d=getData(),pay=document.querySelector('input[name="payment"]:checked').value;
+ let lines=d.lines.length?d.lines.map(x=>`${x.qty}x ${x.name} - ${rp(x.sub)}`).join("\n"):"Belum ada item yang dipilih.";
+ return `ORDER ${orderId}\nAuditorium: ${document.getElementById("aud").value||"-"}\nMovie: ${document.getElementById("movie").value||"-"}\nJam Tayang: ${document.getElementById("show").value||"-"}\nNama: ${document.getElementById("cust").value||"-"}\nNo. HP: ${document.getElementById("phone").value||"-"}\nPembayaran: ${pay}\n\nF&B:\n${lines}\n\nTotal: ${rp(d.total)}`;
+}
+function sendWA(){
+ if(!getData().lines.length){alert("Silakan pilih minimal 1 F&B.");return}
+ window.open("https://wa.me/"+WA+"?text="+encodeURIComponent("*"+plainSummary()+"*"),"_blank");
+}
+async function copySummary(){
+ try{await navigator.clipboard.writeText(plainSummary());alert("Summary berhasil dicopy.");}
+ catch(e){alert("Copy otomatis tidak tersedia di browser ini.");}
+}
+function resetOrder(){
+ if(!confirm("Reset semua pesanan?"))return;
+ cart=products.map(()=>0);products.forEach((p,i)=>document.getElementById("q"+i).textContent=0);
+ ["aud","seat","movie","show","cust","phone"].forEach(id=>document.getElementById(id).value="");
+ document.querySelector('input[value="Cash"]').checked=true;render();
+}
+render();
+</script>
+</body>
+</html>
